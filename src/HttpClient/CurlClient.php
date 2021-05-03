@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace R11baka\Deepai\HttpClient;
 
@@ -13,13 +13,14 @@ class CurlClient implements HttpClient
      */
     private array $options;
 
-    public function __construct(array $options)
+    public function __construct(array $options = [])
     {
         $this->options = $options;
     }
 
     /**
      * @throws HttpException
+     * @todo use builder pattenr for constucting curl obj
      */
     public function do(string $url, string $method, string $body, array $headers): Response
     {
