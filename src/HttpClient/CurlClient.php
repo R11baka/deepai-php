@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace R11baka\Deepai\HttpClient;
 
 
+use CURLFile;
 use R11baka\Deepai\Exception\HttpException;
+use R11baka\Deepai\Exception\IncorrectApiKey;
+use R11baka\Deepai\HttpClient\Curl\CURLStringFile;
 
 class CurlClient implements HttpClient
 {
@@ -27,6 +30,7 @@ class CurlClient implements HttpClient
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $responseHeaders = [];
         curl_setopt($ch, CURLOPT_HEADERFUNCTION,
             function ($curl, $header) use (&$responseHeaders) {
                 $len = strlen($header);
@@ -37,21 +41,39 @@ class CurlClient implements HttpClient
                 return $len;
             }
         );
-        $responseHeaders = [];
         if (!empty($headers)) {
-            curl_setopt($ch, CURLOPT_HEADER, $headers);
+            $requestHeaders = array_map(function ($k, $v) {
+                return "$v: $k";
+            }, $headers, array_keys($headers));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
         }
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
         if (strtolower($method) === 'post') {
+            $postData = array(
+                'image' => new CURLStringFile($body,'image/jpg','test.jpg')
+            );
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         }
         $output = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         $error = curl_error($ch);
+        curl_close($ch);
         if ($error) {
             throw new HttpException(curl_error($ch));
         }
-        curl_close($ch);
+        if ($status === 401) {
+            //     throw new IncorrectApiKey("Please provide correct api-key");
+        }
         return new Response($status, $responseHeaders, $output);
+    }
+
+    function makeCurlFile($file): CURLFile
+    {
+        $mime = mime_content_type($file);
+        $info = pathinfo($file);
+        $name = $info['basename'];
+        return new CURLFile($file, $mime, $name);
     }
 }

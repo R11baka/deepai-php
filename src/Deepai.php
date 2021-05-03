@@ -24,7 +24,7 @@ class Deepai
         if (empty($apiKey) || is_string($apiKey) === false) {
             throw new InvalidArgumentException("Incorrect apiKey:$apiKey");
         }
-        $this->httpClient = new CurlClient();
+        $this->httpClient = new CurlClient(['headers' => ['Api-Key' => $apiKey]]);
         $this->apiKey = $apiKey;
     }
 
@@ -46,7 +46,7 @@ class Deepai
     public function colorize(string $fileContent): Response
     {
         $resp = $this->httpClient->do('https://api.deepai.org/api/colorizer', 'POST', $fileContent, [
-            'api-key' => $this->apiKey
+            'Api-Key' => $this->apiKey,
         ]);
 
         return $resp;
@@ -63,9 +63,10 @@ class Deepai
             throw new BaseDeepaiException("File $filePath not found");
         }
         $fileContent = file_get_contents($filePath);
-        if (!empty($fileContent)) {
-            return $this->colorize($fileContent);
+        if (empty($fileContent)) {
+            throw new BaseDeepaiException("File content empty! " . $filePath);
         }
+        return $this->colorize($fileContent);
     }
 
 }

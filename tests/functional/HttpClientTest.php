@@ -38,7 +38,5 @@ class HttpClientTest extends TestCase
         } catch (HttpException $e) {
             $this->assertFalse(false, "Catch exception");
         }
-
     }
-
 }
