@@ -6,9 +6,9 @@ namespace R11baka\Deepai\HttpClient;
 
 class Response
 {
-    public int $statusCode;
-    public array $headers;
-    public string $body;
+    private int $statusCode;
+    private array $headers;
+    private string $body;
 
     /**
      * Response constructor.

@@ -26,6 +26,17 @@ class CurlClient implements HttpClient
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+            function ($curl, $header) use (&$responseHeaders) {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+                $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
+                return $len;
+            }
+        );
+        $responseHeaders = [];
         if (!empty($headers)) {
             curl_setopt($ch, CURLOPT_HEADER, $headers);
         }
@@ -37,9 +48,9 @@ class CurlClient implements HttpClient
         $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         $error = curl_error($ch);
         if ($error) {
-            throw new HttpException("something went wrong");
+            throw new HttpException(curl_error($ch));
         }
         curl_close($ch);
-        return new Response($status, $headers, $output);
+        return new Response($status, $responseHeaders, $output);
     }
 }
