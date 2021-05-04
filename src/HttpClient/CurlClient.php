@@ -35,7 +35,8 @@ class CurlClient implements HttpClient
         curl_setopt(
             $ch,
             CURLOPT_HEADERFUNCTION,
-            function ($curl, $header) use (&$responseHeaders) {
+            /** @psalm-suppress MissingClosureParamType */
+            function ($curl, string $header) use (&$responseHeaders) {
                 $len = strlen($header);
                 $header = explode(':', $header, 2);
                 if (count($header) < 2) { // ignore invalid headers
@@ -71,6 +72,7 @@ class CurlClient implements HttpClient
         if ($status !== 200) {
             throw new HttpException("Incorrect status $status");
         }
+        /** @var string $output */
         return new Response($status, $responseHeaders, $output);
     }
 }
