@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace R11baka\Deepai;
-
 
 /**
  * Class DeepaiResponse
@@ -46,5 +46,4 @@ class DeepaiResponse
     {
         return $this->url;
     }
-
 }

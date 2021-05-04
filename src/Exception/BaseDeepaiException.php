@@ -1,8 +1,6 @@
 <?php
 
-
 namespace R11baka\Deepai\Exception;
-
 
 use Exception;
 

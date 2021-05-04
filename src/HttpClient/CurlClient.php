@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace R11baka\Deepai\HttpClient;
-
 
 use CURLFile;
 use R11baka\Deepai\Exception\HttpException;
@@ -32,12 +32,15 @@ class CurlClient implements HttpClient
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $responseHeaders = [];
-        curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+        curl_setopt(
+            $ch,
+            CURLOPT_HEADERFUNCTION,
             function ($curl, $header) use (&$responseHeaders) {
                 $len = strlen($header);
                 $header = explode(':', $header, 2);
-                if (count($header) < 2) // ignore invalid headers
+                if (count($header) < 2) { // ignore invalid headers
                     return $len;
+                }
                 $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
                 return $len;
             }

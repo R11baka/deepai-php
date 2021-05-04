@@ -1,8 +1,6 @@
 <?php
 
-
 namespace R11baka\Deepai\Tests\functional;
-
 
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +24,5 @@ class Deepai extends TestCase
         $this->assertIsObject($resp);
         $this->assertIsString($resp->getUrl());
         $this->assertIsString($resp->getId());
-
     }
-
 }

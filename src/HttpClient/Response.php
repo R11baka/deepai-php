@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace R11baka\Deepai\HttpClient;
-
 
 class Response
 {

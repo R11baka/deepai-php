@@ -15,5 +15,5 @@
     <file>tests/functional</file>
 
     <!-- Include full Unleashed Coding Standard -->
-    <rule ref="Unleashed"/>
+    <rule  ref="PSR12"/>
 </ruleset>

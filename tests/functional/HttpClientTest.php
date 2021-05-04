@@ -1,8 +1,6 @@
 <?php
 
-
 namespace R11baka\Deepai\Tests\functional;
-
 
 use PHPUnit\Framework\TestCase;
 use R11baka\Deepai\Exception\HttpException;

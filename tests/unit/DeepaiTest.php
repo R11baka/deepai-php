@@ -7,15 +7,15 @@ use PHPUnit\Framework\TestCase;
 use R11baka\Deepai\Deepai;
 use R11baka\Deepai\Exception\BaseDeepaiException;
 
-
 class DeepaiTest extends TestCase
 {
 
     /**
      * @test
      * @throws BaseDeepaiException
+     * @throws \JsonException
      */
-    public function it_throws_exception_file_not_exists()
+    public function itThrowsExceptionFileNotExists()
     {
         $this->expectException(BaseDeepaiException::class);
         $colorizer = new Deepai('111');
@@ -25,10 +25,9 @@ class DeepaiTest extends TestCase
     /**
      * @test
      */
-    public function it_throws_exception_empty_api_key()
+    public function itThrowsExceptionEmptyApiKey()
     {
         $this->expectException(InvalidArgumentException::class);
-        $colorizer = new Deepai('');
+        new Deepai('');
     }
-
 }
