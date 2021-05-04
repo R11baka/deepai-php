@@ -22,7 +22,7 @@ class Deepai
 
     public function __construct(string $apiKey)
     {
-        if (empty($apiKey) || is_string($apiKey) === false) {
+        if (empty($apiKey)) {
             throw new InvalidArgumentException("Incorrect apiKey:$apiKey");
         }
         $this->httpClient = new CurlClient(['headers' => ['Api-Key' => $apiKey]]);
