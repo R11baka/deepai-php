@@ -19,7 +19,7 @@ class DeepaiTest extends TestCase
     {
         $this->expectException(BaseDeepaiException::class);
         $colorizer = new Deepai('111');
-        $colorizer->colorizeFromPath("NotExistsUrl");
+        $colorizer->colorizeFromPath("NotExistsPath");
     }
 
     /**

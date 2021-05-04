@@ -23,6 +23,7 @@ class CurlClient implements HttpClient
 
     /**
      * @throws HttpException
+     * @throws \JsonException
      * @todo use builder pattenr for constucting curl obj
      */
     public function do(string $url, string $method, string $body, array $headers): Response
@@ -47,11 +48,9 @@ class CurlClient implements HttpClient
             }, $headers, array_keys($headers));
             curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
         }
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
-
         if (strtolower($method) === 'post') {
             $postData = array(
-                'image' => new CURLStringFile($body,'image/jpg','test.jpg')
+                'image' => new CURLStringFile($body, 'test.jpg')
             );
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
@@ -64,16 +63,11 @@ class CurlClient implements HttpClient
             throw new HttpException(curl_error($ch));
         }
         if ($status === 401) {
-            //     throw new IncorrectApiKey("Please provide correct api-key");
+            throw new IncorrectApiKey("Please provide correct api-key");
+        }
+        if ($status !== 200) {
+            throw new HttpException("Incorrect status $status");
         }
         return new Response($status, $responseHeaders, $output);
-    }
-
-    function makeCurlFile($file): CURLFile
-    {
-        $mime = mime_content_type($file);
-        $info = pathinfo($file);
-        $name = $info['basename'];
-        return new CURLFile($file, $mime, $name);
     }
 }

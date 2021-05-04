@@ -40,24 +40,26 @@ class Deepai
 
     /**
      * @param string $fileContent
-     * @return Response
+     * @return DeepaiResponse
      * @throws Exception\HttpException
+     * @throws \JsonException
      */
-    public function colorize(string $fileContent): Response
+    public function colorize(string $fileContent): DeepaiResponse
     {
-        $resp = $this->httpClient->do('https://api.deepai.org/api/colorizer', 'POST', $fileContent, [
+        $response = $this->httpClient->do('https://api.deepai.org/api/colorizer', 'POST', $fileContent, [
             'Api-Key' => $this->apiKey,
         ]);
-
-        return $resp;
+        $output = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        return new DeepaiResponse($output['id'], $output['output_url']);
     }
 
     /**
      * @param string $filePath
      * @return Response
      * @throws BaseDeepaiException
+     * @throws \JsonException
      */
-    public function colorizeFromPath(string $filePath): Response
+    public function colorizeFromPath(string $filePath): DeepaiResponse
     {
         if (file_exists($filePath) === false) {
             throw new BaseDeepaiException("File $filePath not found");
@@ -68,5 +70,4 @@ class Deepai
         }
         return $this->colorize($fileContent);
     }
-
 }
