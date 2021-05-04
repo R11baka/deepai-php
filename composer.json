@@ -34,5 +34,18 @@
         "psr-4": {
             "R11baka\\Deepai\\Tests\\": "tests"
         }
+    },
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpunit": "phpunit --no-coverage",
+        "psalm": "psalm",
+        "test": [
+            "@phpcs",
+            "@psalm",
+            "@phpunit"
+        ]
+    },
+    "config": {
+        "sort-packages": true
     }
 }
