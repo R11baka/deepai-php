@@ -55,7 +55,7 @@ class Deepai
 
     /**
      * @param string $filePath
-     * @return Response
+     * @return DeepaiResponse
      * @throws BaseDeepaiException
      * @throws \JsonException
      */

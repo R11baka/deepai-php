@@ -14,6 +14,22 @@ class DeepaiResponse
      * @var string contains id from response
      */
     private string $id;
+    /**
+     * @var string
+     */
+    private string $url;
+
+    /**
+     * DeepaiResponse constructor.
+     * @param string $id
+     * @param string $filePath
+     */
+    public function __construct(string $id, string $filePath)
+    {
+        $this->id = $id;
+        $this->url = $filePath;
+    }
+
 
     /**
      * @return string
@@ -26,26 +42,9 @@ class DeepaiResponse
     /**
      * @return string
      */
-    public function getFilePath(): string
+    public function getUrl(): string
     {
-        return $this->filePath;
+        return $this->url;
     }
-
-    /**
-     * @var string
-     */
-    private string $filePath;
-
-    /**
-     * DeepaiResponse constructor.
-     * @param string $id
-     * @param string $filePath
-     */
-    public function __construct(string $id, string $filePath)
-    {
-        $this->id = $id;
-        $this->filePath = $filePath;
-    }
-
 
 }

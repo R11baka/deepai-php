@@ -24,7 +24,7 @@ class Deepai extends TestCase
         $dp = new \R11baka\Deepai\Deepai($this->apiKey);
         $resp = $dp->colorizeFromPath('./lena.jpg');
         $this->assertIsObject($resp);
-        $this->assertIsString($resp->getFilePath());
+        $this->assertIsString($resp->getUrl());
         $this->assertIsString($resp->getId());
 
     }
