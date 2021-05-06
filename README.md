@@ -2,7 +2,10 @@
 
 Simple php wrapper for using https://deepai.org/machine-learning-model/colorizer
 api
-
+## Installation
+```
+composer require r11baka/deepai
+```
 ## How to use
 
 1. Pass your api-key to Deepai constuctor and ypu can colorize file by path.
