@@ -3,6 +3,54 @@ name: Tests
 on: [ push, pull_request ]
 
 jobs:
+    lint:
+        runs-on: ubuntu-latest
+        name: Lint
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Set up PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '7.4'
+                    tools: composer:v2
+                    coverage: none
+                env:
+                    fail-fast: true
+
+            -   name: Get Composer Cache Directories
+                id: composer-cache
+                run: |
+                    echo "::set-output name=files_cache::$(composer config cache-files-dir)"
+                    echo "::set-output name=vcs_cache::$(composer config cache-vcs-dir)"
+
+            -   name: Retrieve cached packages
+                uses: actions/cache@v2
+                with:
+                    path: |
+                        ${{ steps.composer-cache.outputs.files_cache }}
+                        ${{ steps.composer-cache.outputs.vcs_cache }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                    restore-keys: |
+                        ${{ runner.os }}-composer-
+
+            -   name: Retrieve Psalm's cache
+                uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.cache/psalm
+                    key: ${{ runner.os }}-psalm-${{ github.sha }}
+                    restore-keys: |
+                        ${{ runner.os }}-psalm-
+
+            -   name: Install composer dependencies
+                run: composer update --prefer-dist
+                env:
+                    COMPOSER_ROOT_VERSION: dev-master
+
+            -   name: Run Psalm
+                run: vendor/bin/psalm --output-format=github --shepherd
     test:
         runs-on: ubuntu-latest
         name: Test PHP ${{ matrix.php-versions }} with Code Coverage
