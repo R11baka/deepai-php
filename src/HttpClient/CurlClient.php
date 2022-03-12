@@ -64,7 +64,7 @@ class CurlClient implements HttpClient
         $error = curl_error($ch);
         curl_close($ch);
         if ($error) {
-            throw new HttpException(curl_error($ch));
+            throw new HttpException($error);
         }
         if ($status === 401) {
             throw new IncorrectApiKey("Please provide correct api-key");
