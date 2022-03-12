@@ -12,11 +12,11 @@ class Response
 
     /**
      * Response constructor.
-     * @param $statusCode
-     * @param $headers
-     * @param $body
+     * @param int $statusCode
+     * @param array $headers
+     * @param string $body
      */
-    public function __construct($statusCode, $headers, $body)
+    public function __construct(int $statusCode, array $headers, string $body)
     {
         $this->statusCode = $statusCode;
         $this->headers = $headers;
