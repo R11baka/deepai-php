@@ -13,7 +13,7 @@ class Response
     /**
      * Response constructor.
      * @param int $statusCode
-     * @param array $headers
+     * @param array<string,string> $headers
      * @param string $body
      */
     public function __construct(int $statusCode, array $headers, string $body)

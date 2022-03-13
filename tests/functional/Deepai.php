@@ -3,6 +3,7 @@
 namespace R11baka\Deepai\Tests\functional;
 
 use PHPUnit\Framework\TestCase;
+use R11baka\Deepai\Exception\IncorrectApiKey;
 
 class Deepai extends TestCase
 {
@@ -24,5 +25,15 @@ class Deepai extends TestCase
         $this->assertIsObject($resp);
         $this->assertIsString($resp->getUrl());
         $this->assertIsString($resp->getId());
+    }
+
+    /**
+     * @test
+     */
+    public function colorizeWithIncorrectKey()
+    {
+        $dp = new \R11baka\Deepai\Deepai('1111');
+        $this->expectException(IncorrectApiKey::class);
+        $dp->colorizeFromPath('./lena.jpg');
     }
 }
