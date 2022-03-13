@@ -69,19 +69,20 @@ jobs:
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
-                    extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, fileinfo
-                    coverage: pcov
+                    extensions: dom, curl, libxml, mbstring, zip, pdo, intl, fileinfo
+                    coverage: xdebug
+                    tools: composer:v2
 
             -   name: Get Composer Cache Directory
                 id: composer-cache
-                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            -   name: Restore Composer Cache
-                uses: actions/cache@v2
+                run: |
+                    echo "::set-output name=dir::$(composer config cache-files-dir)"
+            -   uses: actions/cache@v2
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-                    restore-keys: ${{ runner.os }}-composer-
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                    restore-keys: |
+                        ${{ runner.os }}-composer-
 
             -   name: Setup problem matchers
                 run: |
@@ -90,5 +91,11 @@ jobs:
             -   name: Install dependencies
                 run: composer update  --prefer-dist --no-interaction
 
-            -   name: Execute tests
-                run: vendor/bin/phpunit
+            -   name: Execute unit tests
+                run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+            -   name: Coverage Report as Comment (Clover)
+                uses: lucassabreu/comment-coverage-clover@main
+                with:
+                    file: coverage.xml
+
