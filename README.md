@@ -27,4 +27,6 @@ echo $resp->getId(); // return id for colorized job
 
 2. You have method getUrl ,which have url with colorized image
 
-## How to run test
+## How to run phpcs,psalm and phpunit
+
+1. composer run test
